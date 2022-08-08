@@ -1,4 +1,4 @@
-# Turborepo starter with pnpm
+# Turborepo example Terraform CDK infrastructure with AWS and Vercel deployments
 
 This is an official starter turborepo.
 
@@ -7,14 +7,12 @@ This is an official starter turborepo.
 This turborepo uses [pnpm](https://pnpm.io) as a packages manager. It includes the following packages/apps:
 
 ### Apps and Packages
-
+- `api`: a Lambda function
 - `docs`: a [Next.js](https://nextjs.org) app
 - `web`: another [Next.js](https://nextjs.org) app
 - `ui`: a stub React component library shared by both `web` and `docs` applications
 - `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
 ### Utilities
 
@@ -26,46 +24,50 @@ This turborepo has some additional tools already setup for you:
 
 ## Setup
 
-This repository is used in the `npx create-turbo@latest` command, and selected when choosing which package manager you wish to use with your monorepo (pnpm).
+```bash
+git clone https://github.com/sinanbekar/turborepo-terraform-cdk-aws-vercel
+cd turborepo-terraform-cdk-aws-vercel
+pnpm install
+```
 
 ### Build
 
 To build all apps and packages, run the following command:
 
-```
-cd my-turborepo
+```bash
 pnpm run build
+```
+
+### Deployment
+
+To deploy frontend to Vercel, backend to AWS (Lambda), first install cdktf-cli:
+
+```bash
+pnpm add --global cdktf-cli@latest
+cd infrastructure/cdktf
+cdktf get # generate constructs from hcl providers
+```
+Please make sure that set up these environment variables: `AWS_ACCESS_KEY_ID` `AWS_SECRET_ACCESS_KEY` and `VERCEL_API_TOKEN`
+
+and deploy 🚀
+
+```bash
+cdktf deploy backend frontend
 ```
 
 ### Develop
 
 To develop all apps and packages, run the following command:
 
-```
-cd my-turborepo
+```bash
 pnpm run dev
 ```
 
-### Remote Caching
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.org/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-pnpx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your turborepo:
-
-```
-pnpx turbo link
-```
-
 ## Useful Links
+
+Learn more about Terraform and CDK for Terraform:
+- [Official Guide Vercel and Terraform (HCL)](https://vercel.com/guides/integrating-terraform-with-vercel)
+- [CDKTF Docs](https://www.terraform.io/cdktf)
 
 Learn more about the power of Turborepo:
 
