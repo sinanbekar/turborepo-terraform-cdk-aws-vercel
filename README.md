@@ -1,6 +1,6 @@
 # Turborepo example Terraform CDK infrastructure with AWS and Vercel deployments
 
-This is an official starter turborepo.
+Nextjs deployment on Vercel, Serverless API deployment on AWS Lambda, Terraform CDK infrastructure, monorepo example.
 
 ## What's inside?
 
