@@ -1,0 +1,13 @@
+diff --git a/package.json b/package.json
+index 48ee27bf25efab30d469a3200af6efb46f9efd80..45dd8dd0bbcf8f977abab799b902fa534339e0cb 100644
+--- a/package.json
++++ b/package.json
+@@ -388,6 +388,8 @@
+     "excludeExperimentalModules": true
+   },
+   "exports": {
++    "./aws-lambda-nodejs/lib/bundling": "./aws-lambda-nodejs/lib/bundling.js",
++    "./aws-lambda-nodejs/lib/util": "./aws-lambda-nodejs/lib/util.js",
+     ".": "./index.js",
+     "./package.json": "./package.json",
+     "./.jsii": "./.jsii",
