@@ -161,6 +161,7 @@ class FrontendStack extends TerraformStack {
       //@ts-ignore
       files: webProjectDirectory.files,
       pathPrefix: webProjectDirectory.path,
+      production: true
     });
 
     const docsDeployment = new vercel.Deployment(this, "docsDeployment", {
@@ -168,6 +169,7 @@ class FrontendStack extends TerraformStack {
       //@ts-ignore
       files: docsProjectDirectory.files,
       pathPrefix: docsProjectDirectory.path,
+      production: true
     });
 
     new TerraformOutput(this, "frontendUrlWeb", {
