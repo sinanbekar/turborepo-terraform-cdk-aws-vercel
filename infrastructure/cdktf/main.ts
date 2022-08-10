@@ -9,6 +9,8 @@ import {
   NodejsFunctionProps,
 } from "./lib/nodejs-function";
 
+import { nestEsBuildExternals } from "../../apps/api/util/esbuildOptions";
+
 interface CommonStackConfig {
   monorepoPath: string;
 }
@@ -183,7 +185,8 @@ const monorepoPath = path.join(__dirname, "..", "..");
 
 const backend = new BackendStack(app, "backend", {
   bundling: {
-    entry: path.join(__dirname, "..", "..", "apps", "api", "lambda.js"),
+    entry: path.join(__dirname, "..", "..", "apps", "api", "dist", "lambda.js"),
+    externalModules: ["aws-sdk", ...nestEsBuildExternals],
   },
 });
 
