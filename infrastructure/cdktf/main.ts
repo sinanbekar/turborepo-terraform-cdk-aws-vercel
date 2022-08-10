@@ -1,15 +1,13 @@
 import { Construct } from "constructs";
-import {
-  App,
-  AssetType,
-  TerraformAsset,
-  TerraformOutput,
-  TerraformStack,
-} from "cdktf";
+import { App, TerraformOutput, TerraformStack } from "cdktf";
 import * as path from "path";
 import * as vercel from "./.gen/providers/vercel";
 import * as aws from "@cdktf/provider-aws";
 import * as random from "@cdktf/provider-random";
+import {
+  NodejsFunctionAsset,
+  NodejsFunctionProps,
+} from "./lib/nodejs-function";
 
 interface CommonStackConfig {
   monorepoPath: string;
@@ -19,14 +17,7 @@ type FrontendStackConfig = {
   apiUrl: string;
 } & CommonStackConfig;
 
-type BackendStackConfig = LambdaFunctionConfig;
-
-interface LambdaFunctionConfig {
-  path: string;
-  handler: string;
-  runtime: string;
-  version: string;
-}
+type BackendStackConfig = {} & NodejsFunctionProps;
 
 const lambdaRolePolicy = {
   Version: "2012-10-17",
@@ -58,22 +49,9 @@ class BackendStack extends TerraformStack {
       length: 2,
     });
 
-    // Create Lambda executable
-    const asset = new TerraformAsset(this, "lambdaAsset", {
-      path: path.resolve(__dirname, config.path),
-      type: AssetType.ARCHIVE, // if left empty it infers directory and file
-    });
-
-    // Create unique S3 bucket that hosts Lambda executable
-    const bucket = new aws.s3.S3Bucket(this, "bucket", {
-      bucketPrefix: `bucket-${name}`,
-    });
-
-    // Upload Lambda zip file to newly created S3 bucket
-    const lambdaArchive = new aws.s3.S3Object(this, "lambdaArchive", {
-      bucket: bucket.bucket,
-      key: `${config.version}/${asset.fileName}`,
-      source: asset.path, // returns a posix path
+    // Bundled zip
+    const code = new NodejsFunctionAsset(this, "code", {
+      bundling: config.bundling,
     });
 
     // Create Lambda role
@@ -94,13 +72,11 @@ class BackendStack extends TerraformStack {
       this,
       "lambdaFunction",
       {
-        functionName: `nestjs-api-lambda-${pet.id}`,
-        s3Bucket: bucket.bucket,
-        s3Key: lambdaArchive.key,
-        handler: config.handler,
-        runtime: config.runtime,
-        timeout: 30,
-        memorySize: 512,
+        functionName: `serverless-api-lambda-${pet.id}`,
+        handler: "index.handler",
+        runtime: "nodejs16.x",
+        filename: code.asset.path,
+        sourceCodeHash: code.asset.assetHash,
         role: role.arn,
       }
     );
@@ -112,7 +88,7 @@ class BackendStack extends TerraformStack {
       target: lambdaFunc.arn,
       corsConfiguration: {
         allowOrigins: ["*"],
-        allowHeaders: ["*"],
+        allowHeaders: ["Content-Type", "x-requested-with"],
         allowMethods: ["GET", "PUT", "POST", "DELETE"],
       },
     });
@@ -206,10 +182,9 @@ const app = new App();
 const monorepoPath = path.join(__dirname, "..", "..");
 
 const backend = new BackendStack(app, "backend", {
-  path: "../../apps/api",
-  handler: "lambda.handler",
-  runtime: "nodejs16.x",
-  version: "v0.1.0",
+  bundling: {
+    entry: path.join(__dirname, "..", "..", "apps", "api", "lambda.js"),
+  },
 });
 
 const frontend = new FrontendStack(app, "frontend", {
