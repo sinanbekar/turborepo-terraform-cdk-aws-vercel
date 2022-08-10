@@ -1,6 +1,6 @@
 import * as React from "react";
 export const Button = ({ apiUrl }: { apiUrl?: string }) => {
-  const [apiResponse, setApiResponse] = React.useState<string>();
+  const [apiResponse, setApiResponse] = React.useState<{ data: string }>();
   if (!apiUrl) return <span>Api URL not found</span>;
   return (
     <>
@@ -21,7 +21,7 @@ export const Button = ({ apiUrl }: { apiUrl?: string }) => {
       </button>
       <br />
       <br />
-      {apiResponse ? <div>Response: {apiResponse}</div> : null}
+      {apiResponse ? <div>Response: {JSON.stringify(apiResponse)}</div> : null}
     </>
   );
 };
