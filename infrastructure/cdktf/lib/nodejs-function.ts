@@ -40,6 +40,18 @@ export class NodejsFunctionAsset extends Resource {
       path.join(os.tmpdir(), "nodejs-lambda-bundle")
     );
 
+    const isNpmConfigStrictPeerDependencies =
+      process.env.npm_config_strict_peer_dependencies === "true";
+
+    if (bundling.nodeModules && isNpmConfigStrictPeerDependencies) {
+      // aws-lambda-nodejs currently does not allow packageManager installation configs
+      // when peer dependencies issue occurs and pnpm `strict-peer-dependencies`config is true
+      // pnpm exits with return code 1 which stops all process
+      // even though a node module does not have to be installed as a peer dependency
+      // so we are setting this to false during installation `node_modules`
+      process.env.npm_config_strict_peer_dependencies = "false";
+    }
+
     bundle(
       new Bundling({
         ...bundling,
@@ -48,10 +60,29 @@ export class NodejsFunctionAsset extends Resource {
         architecture: architecture,
         depsLockFilePath: depsLockFilePath,
         projectRoot: projectRoot,
+        /*  commandHooks: {
+          beforeBundling(inputDir: string, outputDir: string): string[] {
+            return [];
+          },
+          afterBundling(inputDir: string, outputDir: string): string[] {
+            return [];
+          },
+          beforeInstall() {
+            return [];
+          },
+        },
+        */
+        //@ts-ignore
+        //  logLevel: "warning", // remove or set to info if you want to debug bundling errors
       }),
       tempBundleDir,
       projectRoot
     );
+
+    if (bundling.nodeModules && isNpmConfigStrictPeerDependencies) {
+      // restore just in case (even though only available in child processes spawned by this process)
+      process.env.npm_config_strict_peer_dependencies = "true";
+    }
 
     this.asset = new TerraformAsset(this, "lambdaAsset", {
       path: tempBundleDir,
@@ -113,7 +144,7 @@ function bundle(
       });
     }
   } catch (err) {
-    throw new Error(`Bundling failed. err: ${err}`);
+    throw new Error(`Bundling failed. ${err}`);
   }
 
   if (fs.readdirSync(bundleDir).length === 0) {
