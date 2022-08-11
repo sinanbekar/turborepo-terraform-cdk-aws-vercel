@@ -1,7 +1,7 @@
-diff --git a/package.json b/package.json
-index 48ee27bf25efab30d469a3200af6efb46f9efd80..45dd8dd0bbcf8f977abab799b902fa534339e0cb 100644
+diff --git a/package.json b/tmp/38febe36071cb620fabb75a2225bae9b/user/package.json
+index a1229da20dd82cf23fe3eea1d873107734c286c1..11fa79e6a96a31750854a45d65cb2e1cbc23915b 100644
 --- a/package.json
-+++ b/package.json
++++ b/tmp/38febe36071cb620fabb75a2225bae9b/user/package.json
 @@ -388,6 +388,8 @@
      "excludeExperimentalModules": true
    },
