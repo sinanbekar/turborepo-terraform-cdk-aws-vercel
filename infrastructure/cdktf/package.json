@@ -13,8 +13,8 @@
     "watch": "tsc -w",
     "test": "jest",
     "test:watch": "jest --watch",
-    "upgrade": "pnpm i cdktf@latest cdktf-cli@latest",
-    "upgrade:next": "pnpm i cdktf@next cdktf-cli@next"
+    "upgrade": "pnpm add cdktf@latest cdktf-cli@latest",
+    "upgrade:next": "pnpm add cdktf@next cdktf-cli@next"
   },
   "engines": {
     "node": ">=16.0"
