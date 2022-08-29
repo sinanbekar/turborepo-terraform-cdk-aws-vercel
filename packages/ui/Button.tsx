@@ -1,11 +1,11 @@
 import * as React from "react";
 export const Button = ({ apiUrl }: { apiUrl?: string }) => {
   const [apiResponse, setApiResponse] = React.useState<{ data: string }>();
-  if (!apiUrl) return <span>Api URL not found</span>;
+  if (!apiUrl) return <span>API URL not found</span>;
   return (
     <>
       <div>
-        <span>Lambda URL: {apiUrl}</span>
+        <span>API URL: {apiUrl}</span>
       </div>
       <br />
       <button
@@ -17,7 +17,7 @@ export const Button = ({ apiUrl }: { apiUrl?: string }) => {
             });
         }}
       >
-        Click to get response from Lambda
+        Click to get response from API
       </button>
       <br />
       <br />

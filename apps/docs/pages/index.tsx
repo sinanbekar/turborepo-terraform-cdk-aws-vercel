@@ -4,7 +4,7 @@ export default function Docs() {
   return (
     <div>
       <h1>Docs</h1>
-      <Button apiUrl={process.env.NEXT_PUBLIC_API_URL} />
+      <Button apiUrl={process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000/'} />
     </div>
   );
 }

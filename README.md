@@ -1,13 +1,13 @@
 # Turborepo example Terraform CDK infrastructure with AWS and Vercel deployments
 
-Nextjs deployment on Vercel, Serverless API (Nestjs) deployment on AWS Lambda, Terraform CDK infrastructure, monorepo example.
+Nextjs deployment on Vercel, Serverless API (Express) deployment on AWS Lambda, Terraform CDK infrastructure, monorepo example.
 
 ## What's inside?
 
 This turborepo uses [pnpm](https://pnpm.io) as a packages manager. It includes the following packages/apps:
 
 ### Apps and Packages
-- `api`: a Nestjs API (Lambda function)
+- `api`: a Express API (Lambda function)
 - `docs`: a [Next.js](https://nextjs.org) app
 - `web`: another [Next.js](https://nextjs.org) app
 - `ui`: a stub React component library shared by both `web` and `docs` applications
